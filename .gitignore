@@ -4,5 +4,8 @@ __pycache__/
 .ipynb_checkpoints/
 challenges/*/outputs/propka*/
 challenges/*/outputs/pk/
-challenges/*/outputs/colabfold/
+challenges/*/outputs/colabfold/**/*.a3m
+challenges/*/outputs/colabfold/**/*.png
+challenges/*/outputs/colabfold/**/*env*
+challenges/*/outputs/colabfold/**/*pairgreedy*
 *.pka
