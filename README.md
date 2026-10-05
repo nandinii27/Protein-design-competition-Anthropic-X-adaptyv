@@ -26,8 +26,7 @@ This package injects the missing signal in two places:
   function over predicted pKa shifts, gated by a geometric hard filter on
   histidine to carboxylate contacts.
 
-The linkage score is unvalidated on designed interfaces. That is stated plainly
-in the methods document rather than hidden.
+The linkage score is unvalidated on designed interfaces. 
 
 ## Layout
 
