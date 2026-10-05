@@ -1,7 +1,6 @@
 # Experimental — burial-aware multi-histidine grafting
 
-Not run. Written after the Challenge 01 submission, kept here as the next
-thing to try.
+Not run yet due to time constraints. 
 
 ## Why
 
