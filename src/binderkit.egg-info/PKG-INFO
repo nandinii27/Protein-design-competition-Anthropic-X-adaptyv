@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: binderkit
+Version: 0.1.0
+Summary: Epitope selection, pH-linkage scoring, liability filtering and Pareto selection for conditional binder design
+Requires-Python: >=3.10
+Requires-Dist: numpy>=1.24
+Requires-Dist: pandas>=2.0
+Requires-Dist: biopython>=1.83
+Requires-Dist: propka>=3.5
+Requires-Dist: scipy>=1.11
+Provides-Extra: notebook
+Requires-Dist: jupyter; extra == "notebook"
+Requires-Dist: matplotlib; extra == "notebook"
+Requires-Dist: seaborn; extra == "notebook"

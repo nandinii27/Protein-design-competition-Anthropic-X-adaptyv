@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "binderkit"
+version = "0.1.0"
+description = "Epitope selection, pH-linkage scoring, liability filtering and Pareto selection for conditional binder design"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "biopython>=1.83",
+    "propka>=3.5",
+    "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+notebook = ["jupyter", "matplotlib", "seaborn"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
