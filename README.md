@@ -1,4 +1,4 @@
-# adaptyv-2026
+# Protein Design
 
 Design and scoring code for the 2026 protein design competition challenges.
 
