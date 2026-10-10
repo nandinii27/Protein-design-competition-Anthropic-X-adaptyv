@@ -1,0 +1,73 @@
+{
+  "standoff_target": 5.0,
+  "sites": [
+    {
+      "target_chain": "A",
+      "target_resnum": 103,
+      "target_resname": "ARG",
+      "target_tip": [
+        9.599,
+        70.739,
+        21.176
+      ],
+      "his_centroid": [
+        8.304,
+        75.429,
+        20.025
+      ],
+      "outward_unit_vector": [
+        -0.259,
+        0.9381,
+        -0.2301
+      ],
+      "standoff_used": 5.0,
+      "clearance": 4.57
+    },
+    {
+      "target_chain": "B",
+      "target_resnum": 112,
+      "target_resname": "LYS",
+      "target_tip": [
+        14.695,
+        71.039,
+        20.71
+      ],
+      "his_centroid": [
+        16.797,
+        75.204,
+        18.912
+      ],
+      "outward_unit_vector": [
+        0.4203,
+        0.8331,
+        -0.3596
+      ],
+      "standoff_used": 5.0,
+      "clearance": 5.0
+    },
+    {
+      "target_chain": "B",
+      "target_resnum": 103,
+      "target_resname": "ARG",
+      "target_tip": [
+        -0.164,
+        66.47,
+        21.84
+      ],
+      "his_centroid": [
+        -2.791,
+        70.258,
+        19.905
+      ],
+      "outward_unit_vector": [
+        -0.5254,
+        0.7577,
+        -0.3871
+      ],
+      "standoff_used": 5.0,
+      "clearance": 3.79
+    }
+  ],
+  "hotspots": "A103,B112,B103",
+  "max_span": 20.23
+}

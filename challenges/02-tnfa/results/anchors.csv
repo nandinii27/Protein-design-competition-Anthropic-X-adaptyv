@@ -1,0 +1,15 @@
+chain,resnum,resname,rel_sasa,dist_to_groove,at_interface,human_aa,mouse_aa,conserved,switch_conserved
+A,53,GLU,0.478,0.0,True,E,D,False,True
+B,104,GLU,0.159,0.0,True,E,D,False,True
+A,104,GLU,0.281,3.82,False,E,D,False,True
+B,10,ASP,0.788,3.82,False,D,D,True,True
+B,110,GLU,0.738,3.85,False,E,E,True,True
+A,127,GLU,0.276,4.21,False,E,E,True,True
+B,107,GLU,0.744,5.17,False,E,E,True,True
+A,10,ASP,0.703,10.64,False,D,D,True,True
+A,135,GLU,0.325,11.23,False,E,E,True,True
+A,107,GLU,0.76,11.39,False,E,E,True,True
+B,53,GLU,0.481,11.7,False,E,D,False,True
+A,110,GLU,0.554,11.83,False,E,E,True,True
+A,73,HIS,0.213,0.0,True,H,Y,False,False
+B,73,HIS,0.21,11.01,False,H,Y,False,False
