@@ -48,16 +48,68 @@ def load_structure(path):
     return PDBParser(QUIET=True).get_structure("s", path)
 
 
+def ordered_ca(model, chain_ids):
+    """CA coordinates of the named chains, in file order."""
+    coords = []
+    for cid in chain_ids:
+        if cid not in [c.id for c in model]:
+            continue
+        for res in model[cid]:
+            if res.id[0] == " " and "CA" in res:
+                coords.append(res["CA"].coord.astype(float))
+    return np.array(coords)
+
+
+def align_transform(ref_pts, out_pts):
+    """
+    Rigid transform mapping reference coordinates onto the design's frame.
+    Design pipelines commonly recentre the system, so motif coordinates
+    recorded against the original structure must be moved before use.
+    """
+    ref_c = ref_pts.mean(axis=0)
+    out_c = out_pts.mean(axis=0)
+    H = (ref_pts - ref_c).T @ (out_pts - out_c)
+    U, _, Vt = np.linalg.svd(H)
+    d = np.sign(np.linalg.det(Vt.T @ U.T))
+    R = Vt.T @ np.diag([1.0, 1.0, d]) @ U.T
+    rmsd = float(np.sqrt((((ref_pts - ref_c) @ R.T - (out_pts - out_c)) ** 2).sum(axis=1).mean()))
+    return R, ref_c, out_c, rmsd
+
+
+def apply_transform(point, transform):
+    R, ref_c, out_c = transform
+    return R @ (np.asarray(point, dtype=float) - ref_c) + out_c
+
+
+def virtual_cb(res):
+    """
+    Build a CB position from backbone N, CA and C using ideal tetrahedral
+    geometry. Generated backbones are often poly-glycine, which has no CB, so
+    the real atom cannot be relied on.
+    """
+    if not all(a in res for a in ("N", "CA", "C")):
+        return None
+    n = res["N"].coord.astype(float)
+    ca = res["CA"].coord.astype(float)
+    c = res["C"].coord.astype(float)
+    b = ca - n
+    cc = c - ca
+    a = np.cross(b, cc)
+    return -0.58273431 * a + 0.56802827 * b - 0.54067466 * cc + ca
+
+
 def side_chain_point(res):
     """
     Approximate where a side chain placed at this position would sit: the CB
-    atom, projected one bond length further along the CA to CB direction so the
-    estimate reflects a side-chain centre rather than its first atom.
+    position, projected one bond length further along the CA to CB direction so
+    the estimate reflects a side-chain centre rather than its first atom.
     """
-    if "CB" not in res or "CA" not in res:
+    if "CA" not in res:
         return None
     ca = res["CA"].coord.astype(float)
-    cb = res["CB"].coord.astype(float)
+    cb = res["CB"].coord.astype(float) if "CB" in res else virtual_cb(res)
+    if cb is None:
+        return None
     direction = cb - ca
     norm = np.linalg.norm(direction)
     if norm < 1e-6:
@@ -65,11 +117,22 @@ def side_chain_point(res):
     return cb + (direction / norm) * 2.0
 
 
-def analyse(complex_path, sites, binder_chain):
+def analyse(complex_path, sites, binder_chain, reference=None, target_chains=("A", "B")):
     structure = load_structure(complex_path)
     model = structure[0]
     if binder_chain not in [c.id for c in model]:
-        raise SystemExit(f"Chain {binder_chain} not found in {complex_path}")
+        raise SystemExit(
+            f"Chain {binder_chain} not found in {complex_path}. "
+            f"Chains present: {','.join(c.id for c in model)}")
+
+    transform = None
+    align_rmsd = None
+    if reference is not None:
+        ref_pts = ordered_ca(reference[0], target_chains)
+        out_pts = ordered_ca(model, target_chains)
+        if len(ref_pts) and len(ref_pts) == len(out_pts):
+            R, ref_c, out_c, align_rmsd = align_transform(ref_pts, out_pts)
+            transform = (R, ref_c, out_c)
 
     assignments = []
     for res in model[binder_chain]:
@@ -80,6 +143,8 @@ def analyse(complex_path, sites, binder_chain):
             continue
         for idx, site in enumerate(sites):
             tip = np.array(site["target_tip"], dtype=float)
+            if transform is not None:
+                tip = apply_transform(tip, transform)
             dist = float(np.linalg.norm(point - tip))
             if MIN_ENGAGE <= dist <= MAX_ENGAGE:
                 assignments.append({
@@ -96,7 +161,8 @@ def analyse(complex_path, sites, binder_chain):
         cur = best.get(a["site_index"])
         if cur is None or a["distance"] < cur["distance"]:
             best[a["site_index"]] = a
-    return structure, sorted(best.values(), key=lambda a: a["site_index"]), assignments
+    return (structure, sorted(best.values(), key=lambda a: a["site_index"]),
+            assignments, align_rmsd)
 
 
 def write_bias_jsonl(path, entries):
@@ -110,7 +176,11 @@ def main():
     ap.add_argument("--complex", nargs="+", required=True,
                     help="designed binder-target complex PDB files (globs accepted)")
     ap.add_argument("--motif", required=True, help="switch_motif.json")
-    ap.add_argument("--binder-chain", default="B")
+    ap.add_argument("--binder-chain", default="C")
+    ap.add_argument("--reference", default=None,
+                    help="original target structure the motif was built from; "
+                         "used to undo any recentring applied by the design pipeline")
+    ap.add_argument("--target-chains", default="A,B")
     ap.add_argument("--bias-strength", type=float, default=3.0,
                     help="logit bias added to histidine at covered positions")
     ap.add_argument("--min-sites", type=int, default=2,
@@ -128,6 +198,9 @@ def main():
     if not paths:
         raise SystemExit("No input structures matched.")
 
+    reference = load_structure(args.reference) if args.reference else None
+    target_chains = tuple(c for c in args.target_chains.split(",") if c)
+
     bias_entries = {}
     report = []
     kept = 0
@@ -135,7 +208,8 @@ def main():
     for path in paths:
         name = os.path.splitext(os.path.basename(path))[0]
         try:
-            structure, best, _ = analyse(path, sites, args.binder_chain)
+            structure, best, _, align_rmsd = analyse(
+                path, sites, args.binder_chain, reference, target_chains)
         except SystemExit:
             raise
         except Exception as exc:
@@ -144,6 +218,9 @@ def main():
             continue
 
         covered = len(best)
+        if align_rmsd is not None and align_rmsd > 1.0:
+            print(f"warning: {name} target does not superpose on the reference "
+                  f"(rmsd {align_rmsd:.2f} A)")
         positions = [a["binder_resnum"] for a in best]
         labels = ";".join(f"{a['site_label']}->{a['binder_resnum']}@{a['distance']}A"
                           for a in best)
