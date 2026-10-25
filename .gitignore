@@ -9,3 +9,13 @@ challenges/*/outputs/colabfold/**/*.png
 challenges/*/outputs/colabfold/**/*env*
 challenges/*/outputs/colabfold/**/*pairgreedy*
 *.pka
+outputs/
+structures/
+aligned/
+designs_pdb/
+controls/
+control_complexes/
+*.zip
+.venv/
+__pycache__/
+*.pyc
