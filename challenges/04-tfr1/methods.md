@@ -95,7 +95,49 @@ endpoint, which needs no local GPU. Unfiltered. No pH engineering applied — th
 His300 rationale above shaped hotspot choice only.
 
 This is not a strong submission and is not presented as one. The defensible work
-in this folder is the epitope analysis.
+in this folder is the epitope analysis.  
+
+# Scripts
+
+## make_tfr1_cif.py
+
+Writes the annotated mmCIF that RFD4-Proteina's hosted endpoint takes as input.
+Format is reverse-engineered from NVIDIA's own example file, since the input
+schema isn't documented publicly.
+
+```
+python make_tfr1_cif.py de_novo_binder.cif tfr1_apical_A.pdb tfr1_annotated.cif
+```
+
+It needs NVIDIA's `de_novo_binder.cif` (Download Example on the RFD4-Proteina
+build.nvidia.com page) because it lifts the `_chem_comp` and `_chem_comp_bond`
+blocks from it verbatim — those already define all 20 standard residues.
+
+What it sets:
+- target on chain B with `mask_coordinate` / `mask_sequence` True (held fixed)
+- binder as one placeholder HETATM row on chain A whose `label_comp_id` is the
+  length range, with `expsegmin` / `expsegmax` carrying min and max length
+- `mask_hotspot_1_atom` True on the hotspot sidechain atoms
+
+Edit `HOTSPOT_ATOMS` and `BINDER_MIN/MAX` at the top to change the epitope or
+binder length. Output parses with `atomworks`, which is what the endpoint uses.
+
+## bulk_designs.py
+
+Calls the hosted endpoint repeatedly across the three hotspot sets, strips the
+fixed target sequence off each returned chain, drops low-complexity artifacts
+(poly-A runs, tandem repeats, low entropy), and writes `submission.csv` plus a
+FASTA for downstream folding.
+
+```
+export NVIDIA_API_KEY=nvapi-...
+python bulk_designs.py
+```
+
+Expects `request.json`, `request_h1.json`, `request_h2.json` in `/content`.
+
+**Untested** — written after I'd run out of time, never executed. The single-call
+version it's based on did work.
 
 ## Proteina-Complexa install notes
 
