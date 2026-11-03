@@ -1,0 +1,52 @@
+{
+  "ectodomain_identity_human_mouse": 0.7806,
+  "apical_domain": [
+    189,
+    383
+  ],
+  "apical_residues_modelled": 195,
+  "apical_surface_residues": 100,
+  "apical_surface_conserved": 59,
+  "apical_surface_divergent": 41,
+  "hotspots": [
+    "A240",
+    "A241",
+    "A244",
+    "A262",
+    "A266",
+    "A273"
+  ],
+  "hotspot_detail": [
+    {
+      "res": "K240",
+      "sasa": 147.3,
+      "mouse": "K"
+    },
+    {
+      "res": "K241",
+      "sasa": 144.0,
+      "mouse": "K"
+    },
+    {
+      "res": "E244",
+      "sasa": 136.8,
+      "mouse": "E"
+    },
+    {
+      "res": "I262",
+      "sasa": 42.7,
+      "mouse": "I"
+    },
+    {
+      "res": "E266",
+      "sasa": 66.5,
+      "mouse": "E"
+    },
+    {
+      "res": "S273",
+      "sasa": 85.8,
+      "mouse": "S"
+    }
+  ],
+  "mouse_model_substitutions_in_apical": 48
+}
