@@ -76,7 +76,3 @@ Outstanding: on a 16 GB card, JAX preallocates most of the VRAM before PyTorch
 gets any. `XLA_PYTHON_CLIENT_PREALLOCATE=false` is the untested first thing to
 try.
 
-## Not in this folder
-
-`submission.csv` and the RFD4-Proteina generation script — add from the session
-where the designs were produced.
