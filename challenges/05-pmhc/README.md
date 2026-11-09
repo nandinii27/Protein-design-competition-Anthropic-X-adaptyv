@@ -100,7 +100,9 @@ Matched-camera stills, and a camera flight over the complex breathing on its low
 
 ## Selection
 
-Twenty designs chosen under an explicit lexicographic key rather than a weighted score, because a composite would let a strong confidence number mask the absence of peptide contact:
+**De novo compliance first.** Seven of the twenty-five designs returned 85–93% sequence identity to β2-microglobulin under Smith-Waterman alignment and were excluded. They are residual β2m copies — the `not_binding` constraint stopped them dominating the run but not from appearing, and they pass every structural filter because they are a real protein. Only an explicit identity check removes them. Surviving designs sit at 3–13% to β2m and 4–12% to the heavy chain, recorded per design in the submission.
+
+The remaining eighteen were ordered under an explicit lexicographic key rather than a weighted score, because a composite would let a strong confidence number mask the absence of peptide contact:
 
 1. contacts the peptide at all — more than 50 Å² buried
 2. cysteine-free, for a reducing cell-free expression system

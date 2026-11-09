@@ -161,7 +161,9 @@ Whether the rigidity difference of §2 survives into the bound complex was teste
 
 ## 9. Selection
 
-Twenty designs were selected under an explicit lexicographic key rather than a weighted score, because a composite would allow a strong cofolding number to mask the absence of peptide contact:
+**De novo compliance is a gate, not a criterion.** Every sequence was aligned against β2-microglobulin and against HLA-A\*11:01 α1-α2 by Smith-Waterman with BLOSUM62, scored as identity over the query length. **Seven of twenty-five designs returned 85–93% identity to β2-microglobulin** and were excluded outright. These are residual β2m copies: the `not_binding` constraint of §3 stopped them dominating the run, as they had when the socket was left empty, but it did not stop the model producing them. They pass every structural filter — they contact the peptide region, they fold perfectly alone because they are a real protein — so nothing short of an explicit identity check removes them. Every surviving design sits at 3–13% to β2m and 4–12% to the heavy chain, and the figure is recorded per design in the submission.
+
+The remaining eighteen were ordered under an explicit lexicographic key rather than a weighted score, because a composite would allow a strong cofolding number to mask the absence of peptide contact:
 
 1. **Peptide contact** — more than 50 Å² of peptide surface buried in the refolded complex. A design on the helices cannot satisfy the specificity objectives.
 2. **Cysteine-free** — the expression system is reducing.
@@ -170,7 +172,7 @@ Twenty designs were selected under an explicit lexicographic key rather than a w
 
 Where the counter-screen of §6 was run, its measured peptide dependence takes precedence over the ipSAE tie-break: `_09` is ranked first despite a lower ipSAE than `_06`, because it is three times more peptide-dependent and that is the objective being scored.
 
-Ranks 1–9 pass all four. Ranks 10–11 contact the peptide well but do not fold independently. Ranks 12–18 contact the peptide and carry cysteines. Ranks 19–20 are declared helix-surface controls. Five designs were excluded entirely for making no peptide contact.
+Ranks 1–9 pass all four. Ranks 10–11 contact the peptide well but do not fold independently. Ranks 12–13 contact the peptide and carry cysteines. Ranks 14–18 make no peptide contact and are declared as helix-surface controls.
 
 **The epitope declared for each design is measured, not assumed** — the peptide residues within 4.5 Å of the binder in that design's own refolded complex, listed per design in the submission.
 
