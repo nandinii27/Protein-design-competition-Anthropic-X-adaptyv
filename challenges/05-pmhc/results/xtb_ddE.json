@@ -1,0 +1,10 @@
+{
+  "energies_hartree": {
+    "g12d_complex": -1881.38092371329,
+    "g12d_target": -1547.4131006702569,
+    "wt_complex": -1868.15168727586,
+    "wt_target": -1534.1856177837462
+  },
+  "ddE_kcal_per_mol": -1.1003698606414851,
+  "truncation_angstrom": 5.0
+}

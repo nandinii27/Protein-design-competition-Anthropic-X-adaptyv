@@ -1,0 +1,38 @@
+# KRAS G12D pMHC binder - BoltzGen design specification
+#
+# Target: HLA-A*11:01 alpha1-alpha2 (chain A, residues 1-182) plus the KRAS
+# G12D decamer VVVGADGVGK (chain C, residues 1-10), in the free-state
+# conformation predicted by AlphaFold2 and superposed into the 7OW6 frame.
+#
+# The binding site is restricted to peptide positions 4-8, the central bulge.
+# Asp6's side chain is buried (8.8 A^2 solvent-accessible, 6.4 of that on a
+# single carboxylate oxygen), so the binder is directed at the bulge backbone
+# rather than at the mutated side chain itself.
+#
+# Keep this file and design_g12d_free.pdb in the same directory - the path
+# below is resolved relative to the .yaml.
+
+entities:
+  # The designed binder. Length is sampled from this range per design.
+  - protein:
+      id: B
+      sequence: 55..90
+
+  # The target, read from the structure file.
+  - file:
+      path: design_g12d_free.pdb
+
+      include:
+        - chain:
+            id: A    # HLA-A*11:01 alpha1-alpha2
+        - chain:
+            id: C    # KRAS G12D peptide
+
+      # Direct the binder at the central bulge only. Without this the model
+      # is free to land on the alpha1/alpha2 helices, which are identical
+      # across every peptide this allele presents and therefore carry no
+      # specificity.
+      binding_types:
+        - chain:
+            id: C
+            binding: 4,5,6,7,8

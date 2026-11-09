@@ -1,0 +1,6 @@
+* text=auto
+*.pdb text eol=lf
+*.cif text eol=lf
+*.csv text eol=lf
+*.mp4 binary
+*.png binary

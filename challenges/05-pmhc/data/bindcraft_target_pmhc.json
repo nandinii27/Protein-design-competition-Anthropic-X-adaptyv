@@ -1,0 +1,9 @@
+{
+    "design_path": "/content/drive/MyDrive/bindcraft_pmhc/",
+    "binder_name": "pmhc_g12d",
+    "starting_pdb": "/content/drive/MyDrive/bindcraft_pmhc/design_g12d.pdb",
+    "chains": "A,C",
+    "target_hotspot_residues": "C4,C5,C6,C7,C8",
+    "lengths": [55, 90],
+    "number_of_final_designs": 100
+}
